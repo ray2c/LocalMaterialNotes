@@ -55,7 +55,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.maelchiotti.localmaterialnotes"
+        applicationId "com.maelchiotti.localmaterialnotes.playground"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
