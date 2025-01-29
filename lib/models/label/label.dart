@@ -63,10 +63,9 @@ class Label extends Equatable implements Comparable<Label> {
 
   /// Returns the color of the [name] text when displayed on the [color], depending on its luminance.
   Color getTextColor(BuildContext context) {
-    return switch (ThemeData.estimateBrightnessForColor(color)) {
-      Brightness.dark => Theme.of(context).colorScheme.onInverseSurface,
-      Brightness.light => Theme.of(context).colorScheme.onSurface,
-    };
+    return ThemeData.estimateBrightnessForColor(color) != Theme.of(context).brightness
+        ? Theme.of(context).colorScheme.onInverseSurface
+        : Theme.of(context).colorScheme.onSurface;
   }
 
   /// Default constructor of a label.
