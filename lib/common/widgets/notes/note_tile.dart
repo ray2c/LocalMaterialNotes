@@ -181,7 +181,7 @@ class _NoteTileState extends ConsumerState<NoteTile> {
           onTap: onTap,
           onLongPress: widget.searchView ? null : onLongPress,
           child: Padding(
-            padding: Paddings.all(16),
+            padding: EdgeInsetsDirectional.symmetric(horizontal: 16, vertical: 12),
             child: Column(
               children: [
                 Row(
