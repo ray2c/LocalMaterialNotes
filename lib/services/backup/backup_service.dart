@@ -38,7 +38,9 @@ class ManualBackupService {
 
   /// Imports all the notes from a JSON file picked by the user and returns whether the import was successful.
   Future<bool> import(BuildContext context) async {
-    final importedFile = await selectAndReadFile(MimeType.json.value);
+    // Compatibility: the json mime type was only introduced in Android 10; just take any for older versions
+    final mimeType = SystemUtils().androidVersion < 29 ? "*/*" : MimeType.json.value;
+    final importedFile = await selectAndReadFile(mimeType);
 
     if (importedFile == null) {
       return false;
