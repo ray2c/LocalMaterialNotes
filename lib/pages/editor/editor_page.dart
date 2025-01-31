@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 
 import '../../common/constants/constants.dart';
 import '../../common/constants/paddings.dart';
+import '../../common/extensions/color_extension.dart';
 import '../../common/extensions/date_time_extensions.dart';
 import '../../common/navigation/app_bars/editor_app_bar.dart';
 import '../../common/navigation/top_navigation.dart';
@@ -100,6 +101,8 @@ class _EditorState extends ConsumerState<NotesEditorPage> {
     final enableLabels = PreferenceKey.enableLabels.getPreferenceOrDefault();
     final showLabelsListInEditorPage = PreferenceKey.showLabelsListInEditorPage.getPreferenceOrDefault();
 
+    final labelMediumTextTheme = Theme.of(context).textTheme.labelMedium;
+
     return ValueListenableBuilder(
       valueListenable: currentNoteNotifier,
       builder: (context, currentNote, child) {
@@ -135,6 +138,7 @@ class _EditorState extends ConsumerState<NotesEditorPage> {
                   child: Padding(
                     padding: Paddings.pageButBottom,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextField(
                           key: Keys.editorTitleTextField,
@@ -155,7 +159,9 @@ class _EditorState extends ConsumerState<NotesEditorPage> {
                             currentNote.editedTime.yMMMMd_at_Hm,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.labelMedium,
+                            style: labelMediumTextTheme?.copyWith(
+                              color: labelMediumTextTheme.color?.subdued,
+                            ),
                           ),
                         Gap(8.0),
                         Expanded(
