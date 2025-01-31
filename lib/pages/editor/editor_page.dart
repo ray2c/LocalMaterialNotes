@@ -136,7 +136,7 @@ class _EditorState extends ConsumerState<NotesEditorPage> {
                       children: [
                         TextField(
                           key: Keys.editorTitleTextField,
-                          readOnly: widget.readOnly,
+                          readOnly: widget.readOnly || (showEditorModeButton && !isEditMode),
                           autofocus: widget.isNewNote && focusTitleOnNewNote,
                           textCapitalization: TextCapitalization.sentences,
                           textInputAction: TextInputAction.next,
