@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 
 import '../../common/constants/constants.dart';
 import '../../common/constants/paddings.dart';
+import '../../common/extensions/date_time_extensions.dart';
 import '../../common/navigation/app_bars/editor_app_bar.dart';
 import '../../common/navigation/top_navigation.dart';
 import '../../common/preferences/preference_key.dart';
@@ -118,6 +119,7 @@ class _EditorState extends ConsumerState<NotesEditorPage> {
         fleatherControllerNotifier.value = editorController;
 
         final showLabelsList = enableLabels && showLabelsListInEditorPage && currentNote.labelsVisibleSorted.isNotEmpty;
+        final showDate = !widget.isNewNote;
 
         return Scaffold(
           appBar: const TopNavigation(
@@ -148,6 +150,13 @@ class _EditorState extends ConsumerState<NotesEditorPage> {
                           onChanged: (text) => _synchronizeTitle(currentNote, text),
                           onSubmitted: _requestEditorFocus,
                         ),
+                        if (showDate)
+                          Text(
+                            currentNote.editedTime.yMMMMd_at_Hm,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
                         Gap(8.0),
                         Expanded(
                           child: Focus(
