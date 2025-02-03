@@ -28,9 +28,13 @@ jobs:
         with:
           channel: 'stable'
           flutter-version-file: pubspec.yaml
+      # Use bash shell for base64 decode
+      # https://stackoverflow.com/questions/63010170/github-actions-decode-base64-string-on-windows
       - name: Add keystore
+        shell: bash
         run: echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 -d > android/localmaterialnotes_keystore.jks
       - name: Add key properties
+        shell: bash
         run: echo "${{ secrets.ANDROID_KEY_PROPERTIES }}" > android/key.properties
       - name: Build app
         run: |
