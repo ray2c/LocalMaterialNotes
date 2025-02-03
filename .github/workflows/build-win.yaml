@@ -11,6 +11,11 @@ jobs:
     environment: build
     runs-on: windows-latest
     steps:
+      # Cherry-picked from https://github.com/subosito/flutter-action/commit/8535a80ce063459137ab08ca17e127d6ad8ad6b9
+      - name: Make yq tool available on Windows runners
+        if: runner.os == 'Windows'
+        run: choco install yq
+        shell: bash
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Java
