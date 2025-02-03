@@ -29,6 +29,7 @@ jobs:
 
   release_play_store:
     name: Release on the Play Store
+    if: github.repository_owner == 'maelchiotti'
     environment: release
     needs: [ get_version ]
     runs-on: ubuntu-latest
@@ -64,6 +65,7 @@ jobs:
 
   release_github:
     name: Release on GitHub
+    if: github.repository_owner == 'maelchiotti'
     environment: release
     needs: [ get_version ]
     runs-on: ubuntu-latest
