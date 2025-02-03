@@ -10,6 +10,7 @@ import '../../constants/paddings.dart';
 import '../../constants/sizes.dart';
 import '../../enums/swipe_direction.dart';
 import '../../extensions/color_extension.dart';
+import '../../extensions/date_time_extensions.dart';
 import '../../preferences/enums/bin_swipe_action.dart';
 import '../../preferences/enums/layout.dart';
 import '../../preferences/enums/swipe_action.dart';
@@ -163,6 +164,7 @@ class _NoteTileState extends ConsumerState<NoteTile> {
     final layout = ref.watch(preferencesProvider.select((preferences) => preferences.layout));
 
     final bodyMediumTextTheme = Theme.of(context).textTheme.bodyMedium;
+    final labelSmallTextTheme = Theme.of(context).textTheme.labelSmall;
 
     final showTitle =
         // Do not show only the title and the preview content is not empty
@@ -200,6 +202,15 @@ class _NoteTileState extends ConsumerState<NoteTile> {
                                   ? Theme.of(context).textTheme.titleLarge
                                   : Theme.of(context).textTheme.titleMedium,
                             ),
+                          // Date
+                          Text(
+                            widget.note.editedTime.yMMMMd_at_Hm,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: labelSmallTextTheme?.copyWith(
+                              color: labelSmallTextTheme.color?.subdued,
+                            ),
+                          ),
                           // Subtitle
                           if (showTitle)
                             Text(
