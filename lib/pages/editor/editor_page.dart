@@ -117,7 +117,7 @@ class _EditorState extends ConsumerState<EditorPage> {
                     child: Column(
                       children: [
                         TitleEditor(
-                          readOnly: widget.readOnly,
+                          readOnly: readOnly,
                           isNewNote: widget.isNewNote,
                           onSubmitted: requestEditorFocus,
                         ),
