@@ -6,6 +6,7 @@ import '../../../common/constants/constants.dart';
 import '../../../common/constants/paddings.dart';
 import '../../../common/extensions/build_context_extension.dart';
 import '../../../common/navigation/app_bars/basic_app_bar.dart';
+import '../../../common/navigation/page_scaffold.dart';
 import '../../../common/navigation/top_navigation.dart';
 import '../../../common/preferences/enums/confirmations.dart';
 import '../../../common/preferences/enums/swipe_actions/archived_swipe_action.dart';
@@ -114,7 +115,7 @@ class _SettingsBehaviorPageState extends ConsumerState<SettingsBehaviorPage> {
       left: DeletedSwipeAction.leftFromPreference(),
     );
 
-    return Scaffold(
+    return PageScaffold(
       appBar: TopNavigation(appbar: BasicAppBar(title: context.l.navigation_settings_behavior)),
       body: SingleChildScrollView(
         child: Padding(

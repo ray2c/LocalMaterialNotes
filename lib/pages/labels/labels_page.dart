@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/constants/paddings.dart';
 import '../../common/navigation/app_bars/labels/labels_app_bar.dart';
+import '../../common/navigation/page_scaffold.dart';
 import '../../common/navigation/side_navigation.dart';
 import '../../common/navigation/top_navigation.dart';
 import '../../common/widgets/placeholders/empty_placeholder.dart';
@@ -25,7 +26,7 @@ class LabelsPage extends ConsumerWidget {
         .watch(labelsProvider)
         .when(
           data: (labels) {
-            return Scaffold(
+            return PageScaffold(
               appBar: TopNavigation(appbar: LabelsAppBar()),
               drawer: const SideNavigation(),
               floatingActionButton: const AddLabelFab(),

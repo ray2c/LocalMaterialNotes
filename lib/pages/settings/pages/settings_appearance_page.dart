@@ -11,6 +11,7 @@ import '../../../common/constants/paddings.dart';
 import '../../../common/enums/supported_language.dart';
 import '../../../common/extensions/build_context_extension.dart';
 import '../../../common/navigation/app_bars/basic_app_bar.dart';
+import '../../../common/navigation/page_scaffold.dart';
 import '../../../common/navigation/top_navigation.dart';
 import '../../../common/preferences/enums/font.dart';
 import '../../../common/preferences/preference_key.dart';
@@ -92,7 +93,7 @@ class _SettingsAppearancePageState extends ConsumerState<SettingsAppearancePage>
 
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    return Scaffold(
+    return PageScaffold(
       appBar: TopNavigation(appbar: BasicAppBar(title: context.l.navigation_settings_appearance)),
       body: SingleChildScrollView(
         child: Padding(

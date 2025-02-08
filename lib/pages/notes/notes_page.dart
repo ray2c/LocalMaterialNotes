@@ -7,6 +7,7 @@ import '../../common/actions/notes/select.dart';
 import '../../common/constants/constants.dart';
 import '../../common/extensions/build_context_extension.dart';
 import '../../common/navigation/app_bars/notes/notes_app_bar.dart';
+import '../../common/navigation/page_scaffold.dart';
 import '../../common/navigation/side_navigation.dart';
 import '../../common/navigation/top_navigation.dart';
 import '../../common/preferences/preference_key.dart';
@@ -89,7 +90,7 @@ class _NotesPageState extends ConsumerState<NotesPage> {
   Widget build(BuildContext context) {
     final availableNotesTypes = NoteType.available;
 
-    return Scaffold(
+    return PageScaffold(
       key: notesPageScaffoldKey,
       appBar: TopNavigation(
         appbar: NotesAppBar(label: widget.label, notesStatus: NoteStatus.available),

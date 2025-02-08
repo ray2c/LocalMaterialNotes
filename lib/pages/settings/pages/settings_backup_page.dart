@@ -12,6 +12,7 @@ import '../../../common/extensions/build_context_extension.dart';
 import '../../../common/extensions/string_extension.dart';
 import '../../../common/files/files_utils.dart';
 import '../../../common/navigation/app_bars/basic_app_bar.dart';
+import '../../../common/navigation/page_scaffold.dart';
 import '../../../common/navigation/top_navigation.dart';
 import '../../../common/preferences/preference_key.dart';
 import '../../../common/ui/snack_bar_utils.dart';
@@ -207,7 +208,7 @@ class _SettingsBackupPageState extends ConsumerState<SettingsBackupPage> {
     final autoExportEncryption = PreferenceKey.autoExportEncryption.preferenceOrDefault;
     final autoExportDirectory = AutoExportUtils().autoExportDirectory.decoded;
 
-    return Scaffold(
+    return PageScaffold(
       appBar: TopNavigation(appbar: BasicAppBar(title: context.l.navigation_settings_backup)),
       body: SingleChildScrollView(
         child: Padding(

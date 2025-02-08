@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import '../../common/constants/constants.dart';
 import '../../common/extensions/build_context_extension.dart';
 import '../../common/navigation/app_bars/notes/editor_app_bar.dart';
+import '../../common/navigation/page_scaffold.dart';
 import '../../common/navigation/top_navigation.dart';
 import '../../common/preferences/preference_key.dart';
 import '../../common/widgets/placeholders/loading_placeholder.dart';
@@ -109,7 +110,7 @@ class _EditorState extends ConsumerState<EditorPage> {
                 contentEditor = ChecklistEditor(note: note, isNewNote: widget.isNewNote, readOnly: readOnly);
             }
 
-            final editor = Scaffold(
+            final editor = PageScaffold(
               appBar: const TopNavigation(appbar: EditorAppBar(), notesStatus: NoteStatus.available),
               body: Column(
                 children: [

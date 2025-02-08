@@ -6,6 +6,7 @@ import 'package:settings_tiles/settings_tiles.dart';
 import '../../../common/constants/paddings.dart';
 import '../../../common/extensions/build_context_extension.dart';
 import '../../../common/navigation/app_bars/basic_app_bar.dart';
+import '../../../common/navigation/page_scaffold.dart';
 import '../../../common/navigation/top_navigation.dart';
 import '../../../common/preferences/preference_key.dart';
 
@@ -70,7 +71,7 @@ class _SettingsNotesTilesPageState extends ConsumerState<SettingsNotesTilesPage>
     final maximumContentPreviewLines = PreferenceKey.maximumContentPreviewLines.preferenceOrDefault;
     final showNoteTypeIcon = PreferenceKey.showNoteTypeIcon.preferenceOrDefault;
 
-    return Scaffold(
+    return PageScaffold(
       appBar: TopNavigation(appbar: BasicAppBar(title: context.l.navigation_settings_notes_tiles)),
       body: SingleChildScrollView(
         child: Padding(
