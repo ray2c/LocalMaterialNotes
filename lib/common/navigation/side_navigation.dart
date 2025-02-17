@@ -149,7 +149,10 @@ class _SideNavigationState extends ConsumerState<SideNavigation> {
             children: [
               Image.asset(Asset.icon.path, fit: BoxFit.fitWidth, width: Sizes.appIcon.size),
               Padding(padding: Paddings.vertical(8)),
-              Text(context.l.app_name, style: Theme.of(context).textTheme.headlineSmall),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(context.l.app_name, style: Theme.of(context).textTheme.headlineSmall),
+              ),
             ],
           ),
         ),
