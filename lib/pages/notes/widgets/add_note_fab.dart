@@ -59,6 +59,7 @@ class _AddNoteFabState extends ConsumerState<AddNoteFab> {
           type: ExpandableFabType.up,
           childrenAnimation: ExpandableFabAnimation.none,
           distance: 64,
+          overlayStyle: ExpandableFabOverlayStyle(blur: 10.0),
           openButtonBuilder: RotateFloatingActionButtonBuilder(
             heroTag: '<open add note FAB hero tag>',
             child: const Icon(Icons.add),
@@ -71,36 +72,56 @@ class _AddNoteFabState extends ConsumerState<AddNoteFab> {
           afterClose: onClose,
           children: [
             if (availableNotesTypes.contains(NoteType.plainText))
-              FloatingActionButton.extended(
-                heroTag: '<add plain text note hero tag>',
-                tooltip: context.l.tooltip_fab_add_plain_text_note,
-                onPressed: () => onPressed(NoteType.plainText),
-                icon: Icon(NoteType.plainText.icon),
-                label: Text(NoteType.plainText.title(context)),
+              Row(
+                children: [
+                  Text(NoteType.plainText.title(context)),
+                  const SizedBox(width: 20),
+                  FloatingActionButton(
+                    heroTag: '<add plain text note hero tag>',
+                    tooltip: context.l.tooltip_fab_add_plain_text_note,
+                    onPressed: () => onPressed(NoteType.plainText),
+                    child: Icon(NoteType.plainText.icon),
+                  ),
+                ],
               ),
             if (availableNotesTypes.contains(NoteType.markdown))
-              FloatingActionButton.extended(
-                heroTag: '<add markdown note hero tag>',
-                tooltip: context.l.tooltip_fab_add_markdown_note,
-                onPressed: () => onPressed(NoteType.markdown),
-                icon: Icon(NoteType.markdown.icon),
-                label: Text(NoteType.markdown.title(context)),
+              Row(
+                children: [
+                  Text(NoteType.markdown.title(context)),
+                  const SizedBox(width: 20),
+                  FloatingActionButton(
+                    heroTag: '<add markdown note hero tag>',
+                    tooltip: context.l.tooltip_fab_add_markdown_note,
+                    onPressed: () => onPressed(NoteType.markdown),
+                    child: Icon(NoteType.markdown.icon),
+                  ),
+                ],
               ),
             if (availableNotesTypes.contains(NoteType.richText))
-              FloatingActionButton.extended(
-                heroTag: '<add rich text note hero tag>',
-                tooltip: context.l.tooltip_fab_add_rich_text_note,
-                onPressed: () => onPressed(NoteType.richText),
-                icon: Icon(NoteType.richText.icon),
-                label: Text(NoteType.richText.title(context)),
+              Row(
+                children: [
+                  Text(NoteType.richText.title(context)),
+                  const SizedBox(width: 20),
+                  FloatingActionButton(
+                    heroTag: '<add rich text note hero tag>',
+                    tooltip: context.l.tooltip_fab_add_rich_text_note,
+                    onPressed: () => onPressed(NoteType.richText),
+                    child: Icon(NoteType.richText.icon),
+                  ),
+                ],
               ),
             if (availableNotesTypes.contains(NoteType.checklist))
-              FloatingActionButton.extended(
-                heroTag: '<add checklist note hero tag>',
-                tooltip: context.l.tooltip_fab_add_checklist_note,
-                onPressed: () => onPressed(NoteType.checklist),
-                icon: Icon(NoteType.checklist.icon),
-                label: Text(NoteType.checklist.title(context)),
+              Row(
+                children: [
+                  Text(NoteType.checklist.title(context)),
+                  const SizedBox(width: 20),
+                  FloatingActionButton(
+                    heroTag: '<add checklist note hero tag>',
+                    tooltip: context.l.tooltip_fab_add_checklist_note,
+                    onPressed: () => onPressed(NoteType.checklist),
+                    child: Icon(NoteType.checklist.icon),
+                  ),
+                ],
               ),
           ],
         );
