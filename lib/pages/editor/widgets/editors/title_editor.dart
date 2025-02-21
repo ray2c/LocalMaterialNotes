@@ -65,7 +65,7 @@ class _TitleEditorState extends ConsumerState<TitleEditor> {
             decoration: InputDecoration.collapsed(hintText: context.l.hint_title),
             controller: titleController,
             onChanged: (text) => onChanged(currentNote, text),
-            onSubmitted: (_) => widget.onSubmitted,
+            onSubmitted: (_) => widget.onSubmitted(),
           );
         },
       ),

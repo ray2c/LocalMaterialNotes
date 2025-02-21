@@ -11,35 +11,28 @@ import '../../../../models/note/note.dart';
 import '../../../../models/note/note_status.dart';
 import '../../../../providers/notes/notes_provider.dart';
 import '../../../../providers/notifiers/notifiers.dart';
+import '../text_editor.dart';
 
 /// Markdown editor.
-class MarkdownEditor extends ConsumerStatefulWidget {
+class MarkdownEditor extends TextEditor {
   /// Markdown allowing to edit the markdown text content of a [MarkdownNote].
   const MarkdownEditor({
     super.key,
     required this.note,
-    required this.isNewNote,
-    required this.readOnly,
-    required this.autofocus,
+    required super.isNewNote,
+    required super.readOnly,
+    required super.autofocus,
+    super.setupFocusNode,
   });
 
   /// The note to display.
   final MarkdownNote note;
 
-  /// Whether the note was just created.
-  final bool isNewNote;
-
-  /// Whether the text fields are read only.
-  final bool readOnly;
-
-  /// Whether the text field should request focus.
-  final bool autofocus;
-
   @override
   ConsumerState<MarkdownEditor> createState() => _MarkdownEditorState();
 }
 
-class _MarkdownEditorState extends ConsumerState<MarkdownEditor> {
+class _MarkdownEditorState extends TextEditorState<MarkdownEditor> {
   late final TextEditingController contentTextController;
 
   @override

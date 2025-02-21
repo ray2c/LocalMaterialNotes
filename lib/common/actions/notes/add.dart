@@ -56,6 +56,8 @@ Future<void> addNote(BuildContext context, WidgetRef ref, {required NoteType not
     return;
   }
 
+  // If this is a new note, force the editing mode
+  isEditModeNotifier.value = true;
   final EditorPageExtra extra = (readOnly: false, isNewNote: true);
   unawaited(context.pushNamed(NavigationRoute.editor.name, extra: extra));
 }

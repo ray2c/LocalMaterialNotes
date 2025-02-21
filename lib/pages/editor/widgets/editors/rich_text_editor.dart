@@ -15,17 +15,19 @@ import '../../../../models/note/note.dart';
 import '../../../../models/note/note_status.dart';
 import '../../../../providers/notes/notes_provider.dart';
 import '../../../../providers/notifiers/notifiers.dart';
+import '../text_editor.dart';
 
 /// Rich text editor.
-class RichTextEditor extends ConsumerStatefulWidget {
+class RichTextEditor extends TextEditor {
   /// Text editor allowing to edit the rich text content of a [RichTextNote].
   const RichTextEditor({
     super.key,
     required this.fleatherController,
     required this.note,
-    required this.isNewNote,
-    required this.readOnly,
-    required this.autofocus,
+    required super.isNewNote,
+    required super.readOnly,
+    required super.autofocus,
+    super.setupFocusNode,
   });
 
   /// The note to display.
@@ -34,28 +36,31 @@ class RichTextEditor extends ConsumerStatefulWidget {
   /// The controller of the Fleather text field.
   final FleatherController fleatherController;
 
-  /// Whether the note was just created.
-  final bool isNewNote;
-
-  /// Whether the text fields are read only.
-  final bool readOnly;
-
-  /// Whether the text field should request focus.
-  final bool autofocus;
-
   @override
   ConsumerState<RichTextEditor> createState() => _RichTextEditorState();
 }
 
-class _RichTextEditorState extends ConsumerState<RichTextEditor> {
+class _RichTextEditorState extends TextEditorState<RichTextEditor> {
+  // https://medium.com/@vlastachu/flutter-that-rare-case-when-you-need-to-remove-listener-even-if-you-call-dispose-63193790e5c3
   @override
   void initState() {
+    widget.fleatherController.addListener(onChanged);
     super.initState();
+  }
 
-    // If this is a new note, force the editing mode
-    if (widget.isNewNote) {
-      isEditModeNotifier.value = true;
+  @override
+  void didUpdateWidget(covariant RichTextEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.fleatherController != oldWidget.fleatherController) {
+      oldWidget.fleatherController.removeListener(onChanged);
+      widget.fleatherController.addListener(onChanged);
     }
+  }
+
+  @override
+  void dispose() {
+    widget.fleatherController.removeListener(onChanged);
+    super.dispose();
   }
 
   void onFocusChange(bool hasFocus) {
@@ -91,41 +96,42 @@ class _RichTextEditorState extends ConsumerState<RichTextEditor> {
     final useParagraphsSpacing = PreferenceKey.useParagraphsSpacing.preferenceOrDefault;
     final editorFont = Font.editorFromPreference();
 
-    widget.fleatherController.addListener(() => onChanged());
-
     return Padding(
       padding: Paddings.pageHorizontal,
-      child: DefaultTextStyle.merge(
-        style: TextStyle(fontFamily: editorFont.familyName),
-        child: Builder(
-          builder: (context) {
-            final fleatherThemeFallback = FleatherThemeData.fallback(context);
-            final fleatherTheme = fleatherThemeFallback.copyWith(
-              paragraph:
-                  !useParagraphsSpacing
-                      ? TextBlockTheme(
-                        style: fleatherThemeFallback.paragraph.style,
-                        spacing: const VerticalSpacing.zero(),
-                      )
-                      : null,
-              link: fleatherThemeFallback.link.copyWith(color: Theme.of(context).colorScheme.primary),
-            );
+      child: Focus(
+        onFocusChange: onFocusChange,
+        child: DefaultTextStyle.merge(
+          style: TextStyle(fontFamily: editorFont.familyName),
+          child: Builder(
+            builder: (context) {
+              final fleatherThemeFallback = FleatherThemeData.fallback(context);
+              final fleatherTheme = fleatherThemeFallback.copyWith(
+                paragraph:
+                    !useParagraphsSpacing
+                        ? TextBlockTheme(
+                          style: fleatherThemeFallback.paragraph.style,
+                          spacing: const VerticalSpacing.zero(),
+                        )
+                        : null,
+                link: fleatherThemeFallback.link.copyWith(color: Theme.of(context).colorScheme.primary),
+              );
 
-            return FleatherTheme(
-              data: fleatherTheme,
-              child: FleatherField(
-                controller: widget.fleatherController,
-                focusNode: editorFocusNode,
-                autofocus: widget.autofocus,
-                readOnly: widget.readOnly,
-                expands: true,
-                onLaunchUrl: onLaunchUrl,
-                decoration: InputDecoration.collapsed(hintText: context.l.hint_content),
-                spellCheckConfiguration: SpellCheckConfiguration(spellCheckService: DefaultSpellCheckService()),
-                padding: Paddings.bottomSystemUi,
-              ),
-            );
-          },
+              return FleatherTheme(
+                data: fleatherTheme,
+                child: FleatherField(
+                  controller: widget.fleatherController,
+                  focusNode: editorFocusNode,
+                  autofocus: widget.autofocus,
+                  readOnly: widget.readOnly,
+                  expands: true,
+                  onLaunchUrl: onLaunchUrl,
+                  decoration: InputDecoration.collapsed(hintText: context.l.hint_content),
+                  spellCheckConfiguration: SpellCheckConfiguration(spellCheckService: DefaultSpellCheckService()),
+                  padding: Paddings.bottomSystemUi,
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

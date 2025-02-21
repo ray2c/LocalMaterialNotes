@@ -9,35 +9,28 @@ import '../../../../models/note/note.dart';
 import '../../../../models/note/note_status.dart';
 import '../../../../providers/notes/notes_provider.dart';
 import '../../../../providers/notifiers/notifiers.dart';
+import '../text_editor.dart';
 
 /// Plain text editor.
-class PlainTextEditor extends ConsumerStatefulWidget {
+class PlainTextEditor extends TextEditor {
   /// Text editor allowing to edit the plain text content of a [PlainTextNote].
   const PlainTextEditor({
     super.key,
     required this.note,
-    required this.isNewNote,
-    required this.readOnly,
-    required this.autofocus,
+    required super.isNewNote,
+    required super.readOnly,
+    required super.autofocus,
+    super.setupFocusNode,
   });
 
   /// The note to display.
   final PlainTextNote note;
 
-  /// Whether the note was just created.
-  final bool isNewNote;
-
-  /// Whether the text fields are read only.
-  final bool readOnly;
-
-  /// Whether the text field should request focus.
-  final bool autofocus;
-
   @override
   ConsumerState<PlainTextEditor> createState() => _PlainTextEditorState();
 }
 
-class _PlainTextEditorState extends ConsumerState<PlainTextEditor> {
+class _PlainTextEditorState extends TextEditorState<PlainTextEditor> {
   late final TextEditingController contentTextController;
 
   @override

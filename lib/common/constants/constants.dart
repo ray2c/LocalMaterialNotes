@@ -26,9 +26,6 @@ final logger = AppLogger();
 /// Codec to encode and decode Markdown files in fleather.
 const parchmentMarkdownCodec = ParchmentMarkdownCodec();
 
-/// Focus node of the note content text editor.
-final editorFocusNode = FocusNode(debugLabel: 'Editor focus node');
-
 /// Utilities for the Storage Access Framework (SAF) APIs.
 final safUtil = SafUtil();
 

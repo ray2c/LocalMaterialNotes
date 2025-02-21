@@ -21,6 +21,7 @@ import 'widgets/editors/markdown_editor.dart';
 import 'widgets/editors/plain_text_editor.dart';
 import 'widgets/editors/rich_text_editor.dart';
 import 'widgets/editors/title_editor.dart';
+import 'widgets/text_editor.dart';
 import 'widgets/toolbar/toolbar.dart';
 
 /// Editor page.
@@ -39,6 +40,9 @@ class EditorPage extends ConsumerStatefulWidget {
 }
 
 class _EditorState extends ConsumerState<EditorPage> {
+  /// Focus node of the note content text editor currently in use.
+  FocusNode? _editorFocusNode;
+
   @override
   void dispose() {
     // ignore: avoid_ref_inside_state_dispose
@@ -49,8 +53,12 @@ class _EditorState extends ConsumerState<EditorPage> {
     super.dispose();
   }
 
+  void setupEditorFocus(FocusNode? editorFocusNode) {
+    _editorFocusNode = editorFocusNode;
+  }
+
   void requestEditorFocus() {
-    editorFocusNode.requestFocus();
+    _editorFocusNode?.requestFocus();
   }
 
   @override
@@ -58,6 +66,12 @@ class _EditorState extends ConsumerState<EditorPage> {
     return ValueListenableBuilder(
       valueListenable: currentNoteNotifier,
       builder: (context, currentNote, child) {
+        // Moved up fleatherController here so that it survives isEditorInEditMode changes
+        // otherwise the cursor will reset to the front when switching between edit/reading mode
+        final fleatherController =
+            currentNote is RichTextNote ? FleatherController(document: currentNote.document) : null;
+        fleatherControllerNotifier.value = fleatherController;
+
         return ValueListenableBuilder(
           valueListenable: isEditModeNotifier,
           builder: (context, isEditorInEditMode, child) {
@@ -78,7 +92,7 @@ class _EditorState extends ConsumerState<EditorPage> {
             final showLabelsList =
                 enableLabels && showLabelsListInEditorPage && currentNote.labelsVisibleSorted.isNotEmpty;
 
-            Widget contentEditor;
+            TextEditor contentEditor;
             Widget? toolbar;
             switch (currentNote) {
               case PlainTextNote note:
@@ -87,16 +101,16 @@ class _EditorState extends ConsumerState<EditorPage> {
                   isNewNote: widget.isNewNote,
                   readOnly: readOnly,
                   autofocus: autofocus,
+                  setupFocusNode: setupEditorFocus,
                 );
               case RichTextNote note:
-                final fleatherController = FleatherController(document: note.document);
-                fleatherControllerNotifier.value = fleatherController;
                 contentEditor = RichTextEditor(
                   note: note,
-                  fleatherController: fleatherController,
+                  fleatherController: fleatherController!,
                   isNewNote: widget.isNewNote,
                   readOnly: readOnly,
                   autofocus: autofocus,
+                  setupFocusNode: setupEditorFocus,
                 );
                 toolbar = Toolbar(fleatherController: fleatherController);
               case MarkdownNote note:
@@ -105,9 +119,15 @@ class _EditorState extends ConsumerState<EditorPage> {
                   isNewNote: widget.isNewNote,
                   readOnly: readOnly,
                   autofocus: autofocus,
+                  setupFocusNode: setupEditorFocus,
                 );
               case ChecklistNote note:
-                contentEditor = ChecklistEditor(note: note, isNewNote: widget.isNewNote, readOnly: readOnly);
+                contentEditor = ChecklistEditor(
+                  note: note,
+                  isNewNote: widget.isNewNote,
+                  readOnly: readOnly,
+                  setupFocusNode: setupEditorFocus,
+                );
             }
 
             final editor = PageScaffold(
