@@ -19,18 +19,29 @@ class AddNoteFab extends ConsumerStatefulWidget {
 }
 
 class _AddNoteFabState extends ConsumerState<AddNoteFab> {
+  NoteType? _newNoteType;
+
   void onOpen() {
     canPopNotifier.update();
   }
 
   void onClose() {
     canPopNotifier.update();
+
+    if (_newNoteType != null) {
+      addNote(context, ref, noteType: _newNoteType!);
+      _newNoteType = null;
+    }
   }
 
   void onPressed(NoteType noteType) {
-    addNote(context, ref, noteType: noteType);
+    _newNoteType = noteType;
 
-    closeAddNoteFabIfOpen();
+    if (NoteType.available.length == 1) {
+      onClose();
+    } else {
+      closeAddNoteFabIfOpen();
+    }
   }
 
   @override
