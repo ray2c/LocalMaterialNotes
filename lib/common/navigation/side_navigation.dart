@@ -139,60 +139,66 @@ class _SideNavigationState extends ConsumerState<SideNavigation> {
       labels = ref.read(labelsNavigationProvider).value ?? [];
     }
 
-    return NavigationDrawer(
-      onDestinationSelected: navigate,
-      selectedIndex: index,
-      children: <Widget>[
-        DrawerHeader(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(Asset.icon.path, fit: BoxFit.fitWidth, width: Sizes.appIcon.size),
-              Padding(padding: Paddings.vertical(8)),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(context.l.app_name, style: Theme.of(context).textTheme.headlineSmall),
-              ),
-            ],
-          ),
-        ),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.notes_outlined),
-          selectedIcon: const Icon(Icons.notes),
-          label: Text(context.l.navigation_notes),
-        ),
-        Divider(indent: 24, endIndent: 24),
-        if (enableLabels) ...[
-          for (final label in labels)
-            NavigationDrawerDestination(
-              icon: Icon(label.pinned ? Icons.label_important_outline : Icons.label_outline, color: label.color),
-              selectedIcon: Icon(label.pinned ? Icons.label_important : Icons.label, color: label.color),
-              label: Expanded(child: Text(label.name, maxLines: 2, overflow: TextOverflow.ellipsis)),
+    /// Wrap an outside [PrimaryScrollController] to workaround bug with [NavigationDrawer]
+    /// returning a [Drawer] with a child [ListView] without a [ScrollController].
+    /// See https://github.com/flutter/flutter/issues/89992 for elaboration on the symptom and solutions.
+    return PrimaryScrollController(
+      controller: ScrollController(),
+      child: NavigationDrawer(
+        onDestinationSelected: navigate,
+        selectedIndex: index,
+        children: <Widget>[
+          DrawerHeader(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(Asset.icon.path, fit: BoxFit.fitWidth, width: Sizes.appIcon.size),
+                Padding(padding: Paddings.vertical(8)),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(context.l.app_name, style: Theme.of(context).textTheme.headlineSmall),
+                ),
+              ],
             ),
+          ),
           NavigationDrawerDestination(
-            icon: const Icon(Symbols.auto_label),
-            selectedIcon: VariedIcon.varied(Symbols.auto_label, fill: 1.0),
-            label: Text(context.l.navigation_manage_labels_destination),
+            icon: const Icon(Icons.notes_outlined),
+            selectedIcon: const Icon(Icons.notes),
+            label: Text(context.l.navigation_notes),
           ),
           Divider(indent: 24, endIndent: 24),
+          if (enableLabels) ...[
+            for (final label in labels)
+              NavigationDrawerDestination(
+                icon: Icon(label.pinned ? Icons.label_important_outline : Icons.label_outline, color: label.color),
+                selectedIcon: Icon(label.pinned ? Icons.label_important : Icons.label, color: label.color),
+                label: Expanded(child: Text(label.name, maxLines: 2, overflow: TextOverflow.ellipsis)),
+              ),
+            NavigationDrawerDestination(
+              icon: const Icon(Symbols.auto_label),
+              selectedIcon: VariedIcon.varied(Symbols.auto_label, fill: 1.0),
+              label: Text(context.l.navigation_manage_labels_destination),
+            ),
+            Divider(indent: 24, endIndent: 24),
+          ],
+          NavigationDrawerDestination(
+            icon: const Icon(Icons.archive_outlined),
+            selectedIcon: const Icon(Icons.archive),
+            label: Text(context.l.navigation_archives),
+          ),
+          NavigationDrawerDestination(
+            icon: const Icon(Icons.delete_outline),
+            selectedIcon: const Icon(Icons.delete),
+            label: Text(context.l.navigation_bin),
+          ),
+          Divider(indent: 24, endIndent: 24),
+          NavigationDrawerDestination(
+            icon: const Icon(Icons.settings_outlined),
+            selectedIcon: const Icon(Icons.settings),
+            label: Text(context.l.navigation_settings),
+          ),
         ],
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.archive_outlined),
-          selectedIcon: const Icon(Icons.archive),
-          label: Text(context.l.navigation_archives),
-        ),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.delete_outline),
-          selectedIcon: const Icon(Icons.delete),
-          label: Text(context.l.navigation_bin),
-        ),
-        Divider(indent: 24, endIndent: 24),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.settings_outlined),
-          selectedIcon: const Icon(Icons.settings),
-          label: Text(context.l.navigation_settings),
-        ),
-      ],
+      ),
     );
   }
 }

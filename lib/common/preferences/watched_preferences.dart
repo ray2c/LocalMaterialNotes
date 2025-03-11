@@ -18,6 +18,7 @@ class WatchedPreferences {
   // Accessibility
   late double textScaling;
   late bool useWhiteTextDarkMode;
+  late bool showScrollbars;
 
   // Notes
   late Layout layout;
@@ -30,6 +31,7 @@ class WatchedPreferences {
     Font? appFont,
     double? textScaling,
     bool? useWhiteTextDarkMode,
+    bool? showScrollbars,
     Layout? layout,
   }) {
     this.themeMode = themeMode ?? ThemeUtils().themeMode;
@@ -39,6 +41,7 @@ class WatchedPreferences {
 
     this.textScaling = textScaling ?? PreferenceKey.textScaling.preferenceOrDefault;
     this.useWhiteTextDarkMode = useWhiteTextDarkMode ?? PreferenceKey.useWhiteTextDarkMode.preferenceOrDefault;
+    this.showScrollbars = showScrollbars ?? PreferenceKey.showScrollbars.preferenceOrDefault;
 
     this.layout = layout ?? Layout.fromPreference();
   }

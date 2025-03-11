@@ -127,7 +127,9 @@ class _RichTextEditorState extends TextEditorState<RichTextEditor> {
                   onLaunchUrl: onLaunchUrl,
                   decoration: InputDecoration.collapsed(hintText: context.l.hint_content),
                   spellCheckConfiguration: SpellCheckConfiguration(spellCheckService: DefaultSpellCheckService()),
-                  padding: Paddings.bottomSystemUi,
+                  padding: EdgeInsetsDirectional.only(
+                    bottom: MediaQuery.paddingOf(context).bottom,
+                  ),
                 ),
               );
             },

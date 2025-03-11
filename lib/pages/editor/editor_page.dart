@@ -130,6 +130,11 @@ class _EditorState extends ConsumerState<EditorPage> {
                 );
             }
 
+            final bottomBar = [
+              if (showLabelsList) EditorLabelsList(readOnly: widget.readOnly),
+              if (toolbar != null && isEditorInEditMode && !currentNote.deleted) toolbar,
+            ];
+
             final editor = PageScaffold(
               appBar: const TopNavigation(appbar: EditorAppBar(), notesStatus: NoteStatus.available),
               body: Column(
@@ -147,14 +152,7 @@ class _EditorState extends ConsumerState<EditorPage> {
                       ],
                     ),
                   ),
-                  SafeArea(
-                    child: Column(
-                      children: [
-                        if (showLabelsList) EditorLabelsList(readOnly: widget.readOnly),
-                        if (toolbar != null && isEditorInEditMode && !currentNote.deleted) toolbar,
-                      ],
-                    ),
-                  ),
+                  if (bottomBar.isNotEmpty) SafeArea(child: Column(children: bottomBar)),
                 ],
               ),
             );

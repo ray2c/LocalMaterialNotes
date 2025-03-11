@@ -13,6 +13,7 @@ import 'common/enums/supported_language.dart';
 import 'common/extensions/locale_extension.dart';
 import 'common/preferences/preference_key.dart';
 import 'common/system_utils.dart';
+import 'common/ui/app_scroll_behavior.dart';
 import 'common/ui/theme_utils.dart';
 import 'l10n/app_localizations/app_localizations.g.dart';
 import 'navigation/router.dart';
@@ -145,6 +146,7 @@ class _AppState extends ConsumerState<App> with AfterLayoutMixin<App> {
                 supportedLocales: SupportedLanguage.locales,
                 locale: SystemUtils().appLocale,
                 debugShowCheckedModeBanner: false,
+                scrollBehavior: const AppScrollBehavior(),
               ),
             ),
           ),

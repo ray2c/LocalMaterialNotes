@@ -64,6 +64,13 @@ class _SettingsAppearancePageState extends ConsumerState<SettingsAccessibilityPa
     setState(() {});
   }
 
+  /// Toggles whether to show scrollbars.
+  void _toggleShowScrollbars(bool toggled) {
+    PreferenceKey.showScrollbars.set(toggled);
+
+    ref.read(preferencesProvider.notifier).update(WatchedPreferences(showScrollbars: toggled));
+  }
+
   @override
   Widget build(BuildContext context) {
     final textScaling = ref.watch(preferencesProvider.select((preferences) => preferences.textScaling));
@@ -72,6 +79,7 @@ class _SettingsAppearancePageState extends ConsumerState<SettingsAccessibilityPa
       preferencesProvider.select((preferences) => preferences.useWhiteTextDarkMode),
     );
     final disableSubduedNoteContentPreview = PreferenceKey.disableSubduedNoteContentPreview.preferenceOrDefault;
+    final showScrollbars = ref.watch(preferencesProvider.select((preferences) => preferences.showScrollbars));
 
     final darkTheme = Theme.of(context).brightness == Brightness.dark;
 
@@ -129,6 +137,19 @@ class _SettingsAppearancePageState extends ConsumerState<SettingsAccessibilityPa
                     description: context.l.settings_disable_subdued_note_content_preview_description,
                     toggled: disableSubduedNoteContentPreview,
                     onChanged: _toggleDisableSubduedNoteContentPreview,
+                  ),
+                ],
+              ),
+              SettingSection(
+                title: context.l.settings_accessibility_interaction,
+                divider: null,
+                tiles: [
+                  SettingSwitchTile(
+                    icon: Icons.drag_handle,
+                    title: context.l.settings_show_scrollbars,
+                    description: context.l.settings_show_scrollbars_description,
+                    toggled: showScrollbars,
+                    onChanged: _toggleShowScrollbars,
                   ),
                 ],
               ),

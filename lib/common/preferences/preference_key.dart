@@ -72,6 +72,7 @@ enum PreferenceKey<T extends Object> {
   biggerTitles(false),
   useWhiteTextDarkMode<bool>(false),
   disableSubduedNoteContentPreview<bool>(false),
+  showScrollbars(false),
 
   // Notes
   sortMethod<String>('editedDate', backup: false),
