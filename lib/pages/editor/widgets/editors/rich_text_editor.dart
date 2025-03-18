@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:fleather/fleather.dart';
@@ -41,25 +42,28 @@ class RichTextEditor extends TextEditor {
 }
 
 class _RichTextEditorState extends TextEditorState<RichTextEditor> {
+  /// The stream of the Fleather document.
+  StreamSubscription<ParchmentChange>? _fleatherStream;
+
   // https://medium.com/@vlastachu/flutter-that-rare-case-when-you-need-to-remove-listener-even-if-you-call-dispose-63193790e5c3
   @override
   void initState() {
-    widget.fleatherController.addListener(onChanged);
     super.initState();
+    _setupFleatherController();
   }
 
   @override
   void didUpdateWidget(covariant RichTextEditor oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.fleatherController != oldWidget.fleatherController) {
-      oldWidget.fleatherController.removeListener(onChanged);
-      widget.fleatherController.addListener(onChanged);
+      _cleanupFleatherController(oldWidget);
+      _setupFleatherController();
     }
   }
 
   @override
   void dispose() {
-    widget.fleatherController.removeListener(onChanged);
+    _cleanupFleatherController(widget);
     super.dispose();
   }
 
@@ -78,10 +82,25 @@ class _RichTextEditorState extends TextEditorState<RichTextEditor> {
     launchUrl(uri);
   }
 
+  void _setupFleatherController() {
+    widget.fleatherController.addListener(onChanged);
+    if (_fleatherStream != null) {
+      _fleatherStream?.cancel();
+    }
+    _fleatherStream = widget.fleatherController.document.changes.listen((_) => onDocumentChanged());
+  }
+
+  void _cleanupFleatherController(RichTextEditor oldWidget) {
+    _fleatherStream?.cancel();
+    oldWidget.fleatherController.removeListener(onChanged);
+  }
+
   void onChanged() {
     fleatherControllerCanUndoNotifier.value = widget.fleatherController.canUndo;
     fleatherControllerCanRedoNotifier.value = widget.fleatherController.canRedo;
+  }
 
+  void onDocumentChanged() {
     RichTextNote note = widget.note..content = jsonEncode(widget.fleatherController.document.toJson());
 
     ref.read(notesProvider(status: NoteStatus.available, label: currentLabelFilter).notifier).edit(note);
