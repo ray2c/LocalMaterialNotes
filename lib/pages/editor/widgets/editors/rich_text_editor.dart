@@ -13,8 +13,6 @@ import '../../../../common/extensions/build_context_extension.dart';
 import '../../../../common/preferences/enums/font.dart';
 import '../../../../common/preferences/preference_key.dart';
 import '../../../../models/note/note.dart';
-import '../../../../models/note/note_status.dart';
-import '../../../../providers/notes/notes_provider.dart';
 import '../../../../providers/notifiers/notifiers.dart';
 import '../text_editor.dart';
 
@@ -41,9 +39,12 @@ class RichTextEditor extends TextEditor {
   ConsumerState<RichTextEditor> createState() => _RichTextEditorState();
 }
 
-class _RichTextEditorState extends TextEditorState<RichTextEditor> {
+class _RichTextEditorState extends TextEditorState<RichTextNote, String, RichTextEditor> {
   /// The stream of the Fleather document.
   StreamSubscription<ParchmentChange>? _fleatherStream;
+
+  @override
+  onPullChanges() => getContent;
 
   // https://medium.com/@vlastachu/flutter-that-rare-case-when-you-need-to-remove-listener-even-if-you-call-dispose-63193790e5c3
   @override
@@ -101,9 +102,17 @@ class _RichTextEditorState extends TextEditorState<RichTextEditor> {
   }
 
   void onDocumentChanged() {
-    RichTextNote note = widget.note..content = jsonEncode(widget.fleatherController.document.toJson());
+    pullChanges();
+  }
 
-    ref.read(notesProvider(status: NoteStatus.available, label: currentLabelFilter).notifier).edit(note);
+  String? getContent() {
+    return jsonEncode(widget.fleatherController.document.toJson());
+  }
+
+  @override
+  bool savePart(RichTextNote note, String content) {
+    note.content = content;
+    return true;
   }
 
   @override

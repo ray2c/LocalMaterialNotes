@@ -1474,5 +1474,13 @@
   "snack_bar_confirm_exiting": "Press back again to exit the application.",
   "@snack_bar_confirm_exiting": {
     "description": "Snack bar asking the user to confirm exiting the application by pressing back again."
+  },
+  "autosave_status_edited": "edited",
+  "@autosave_status_edited": {
+    "description": "Description shown in the autosave status of the editor page when the note has been edited."
+  },
+  "autosave_status_saved": "saved",
+  "@autosave_status_saved": {
+    "description": "Description shown in the autosave status of the editor page when the note has been saved."
   }
 }

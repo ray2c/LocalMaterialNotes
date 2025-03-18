@@ -53,19 +53,32 @@ class Notes extends _$Notes {
   }
 
   /// Saves the [editedNote] to the database.
-  Future<bool> edit(Note editedNote) async {
+  /// Optionally uses [putSync] to force a synchronous Isar transaction
+  /// which is mainly useful to avoid data loss and the error upon restart
+  /// `IsarError: Cannot open Environment: MdbxError (11): Try again`
+  /// after exiting from a back press while a write is pending.
+  Future<bool> edit(Note editedNote, [bool putSync = false]) async {
     _checkStatus([NoteStatus.available, NoteStatus.archived]);
 
     editedNote.editedTime = DateTime.now();
 
     try {
-      await _notesService.put(editedNote);
+      if (putSync) {
+        await _notesService.putSync(editedNote);
+      } else {
+        await _notesService.put(editedNote);
+      }
     } catch (exception, stackTrace) {
       logger.e(exception.toString(), exception, stackTrace);
 
       return false;
     }
 
+    return await updateStateAsync(editedNote);
+  }
+
+  /// Update state asynchronously.
+  Future<bool> updateStateAsync(Note editedNote) async {
     final notes = (state.value ?? []);
     if (editedNote.deleted) {
       notes.remove(editedNote);

@@ -21,8 +21,10 @@ import 'widgets/editors/markdown_editor.dart';
 import 'widgets/editors/plain_text_editor.dart';
 import 'widgets/editors/rich_text_editor.dart';
 import 'widgets/editors/title_editor.dart';
+import 'widgets/autosave_status.dart';
 import 'widgets/text_editor.dart';
 import 'widgets/toolbar/toolbar.dart';
+import 'autosave_controller.dart';
 
 /// Editor page.
 class EditorPage extends ConsumerStatefulWidget {
@@ -39,7 +41,7 @@ class EditorPage extends ConsumerStatefulWidget {
   ConsumerState<EditorPage> createState() => _EditorState();
 }
 
-class _EditorState extends ConsumerState<EditorPage> {
+class _EditorState extends ConsumerState<EditorPage> with AutosaveState, AutosaveHandler<Note> {
   /// Focus node of the note content text editor currently in use.
   FocusNode? _editorFocusNode;
 
@@ -62,23 +64,36 @@ class _EditorState extends ConsumerState<EditorPage> {
   }
 
   @override
+  bool commit(Note note, bool sync) {
+    globalRef.read(notesProvider(status: NoteStatus.available, label: currentLabelFilter).notifier).edit(note, sync);
+    return true;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: currentNoteNotifier,
       builder: (context, currentNote, child) {
-        // Moved up fleatherController here so that it survives isEditorInEditMode changes
-        // otherwise the cursor will reset to the front when switching between edit/reading mode
+        if (currentNote == null) {
+          return const LoadingPlaceholder();
+        }
+
         final fleatherController =
             currentNote is RichTextNote ? FleatherController(document: currentNote.document) : null;
         fleatherControllerNotifier.value = fleatherController;
 
+        final titleController = TextEditingController(text: currentNote.title);
+        setupAutosaveController(currentNote);
+
+        final autosaveStatus = AutosaveStatus(
+          note: currentNote,
+          isNewNote: widget.isNewNote,
+          controller: getAutosaveController(),
+        );
+
         return ValueListenableBuilder(
           valueListenable: isEditModeNotifier,
           builder: (context, isEditorInEditMode, child) {
-            if (currentNote == null) {
-              return const LoadingPlaceholder();
-            }
-
             final lockNote = PreferenceKey.lockNote.preferenceOrDefault;
             final lockLabel = PreferenceKey.lockLabel.preferenceOrDefault;
 
@@ -129,6 +144,12 @@ class _EditorState extends ConsumerState<EditorPage> {
                   setupFocusNode: setupEditorFocus,
                 );
             }
+            final titleEditor = TitleEditor(
+              readOnly: readOnly,
+              isNewNote: widget.isNewNote,
+              onSubmitted: requestEditorFocus,
+              controller: titleController,
+            );
 
             final bottomBar = [
               if (showLabelsList) EditorLabelsList(readOnly: widget.readOnly),
@@ -142,12 +163,11 @@ class _EditorState extends ConsumerState<EditorPage> {
                   Expanded(
                     child: Column(
                       children: [
-                        TitleEditor(
-                          readOnly: readOnly,
-                          isNewNote: widget.isNewNote,
-                          onSubmitted: requestEditorFocus,
-                        ),
-                        Gap(8.0),
+                        titleEditor,
+                        Gap(4.0),
+                        // ignore: unnecessary_null_comparison
+                        if (autosaveStatus != null) autosaveStatus,
+                        Gap(4.0),
                         Expanded(child: contentEditor),
                       ],
                     ),

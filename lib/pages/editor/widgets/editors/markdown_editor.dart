@@ -31,7 +31,7 @@ class MarkdownEditor extends TextEditor {
   ConsumerState<MarkdownEditor> createState() => _MarkdownEditorState();
 }
 
-class _MarkdownEditorState extends TextEditorState<MarkdownEditor> {
+class _MarkdownEditorState extends TextEditorState<MarkdownNote, String, MarkdownEditor> {
   late final TextEditingController contentTextController;
 
   @override
@@ -48,15 +48,21 @@ class _MarkdownEditorState extends TextEditorState<MarkdownEditor> {
   }
 
   @override
+  bool savePart(MarkdownNote note, String content) {
+    note.content = content;
+    return true;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Padding(
       padding: Paddings.pageHorizontal,
       child:
-          widget.readOnly && !widget.note.isContentEmpty
+          widget.readOnly && contentTextController.text.isNotEmpty
               ? Markdown(
-                data: widget.note.content,
+                data: contentTextController.text,
                 padding: EdgeInsets.zero,
                 selectable: true,
                 extensionSet: ExtensionSet.gitHubFlavored,
@@ -80,7 +86,7 @@ class _MarkdownEditorState extends TextEditorState<MarkdownEditor> {
                 expands: true,
                 decoration: InputDecoration.collapsed(hintText: context.l.hint_content),
                 spellCheckConfiguration: SpellCheckConfiguration(spellCheckService: DefaultSpellCheckService()),
-                onChanged: onChanged,
+                onChanged: pushChanges,
               ),
     );
   }

@@ -196,6 +196,24 @@ class NotesService {
     await _indexesService.updateIndexes([note]);
   }
 
+  /// Puts the [note] in the database synchronously.
+  Future<void> putSync(Note note) async {
+    _database.writeTxnSync(() {
+      switch (note) {
+        case final PlainTextNote _:
+          _plainTextNotes.putSync(note);
+        case final MarkdownNote _:
+          _markdownNotes.putSync(note);
+        case final RichTextNote _:
+          _richTextNotes.putSync(note);
+        case final ChecklistNote _:
+          _checklistNotes.putSync(note);
+      }
+    });
+
+    await _indexesService.updateIndexes([note]);
+  }
+
   /// Puts the [notes] in the database.
   Future<void> putAll(List<Note> notes) async {
     final plainTextNotes = notes.whereType<PlainTextNote>().toList();

@@ -32,31 +32,32 @@ class ChecklistEditor extends TextEditor {
     ref.read(notesProvider(status: NoteStatus.available, label: currentLabelFilter).notifier).edit(newNote);
   }
 
-  /// Stateless [build].
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
-        Expanded(
-          child: Checklist(
-            lines: note.checklistLines,
-            enabled: !readOnly,
-            autofocusFirstLine: isNewNote,
-            onChanged: (checklistLines) => onChecklistChanged(ref, checklistLines),
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// Boilerplate from [ConsumerWidget] from which [ChecklistEditor] originally extends.
   @override
   ConsumerState<ChecklistEditor> createState() => _ChecklistEditorState();
 }
 
-/// Stateless stuff
-class _ChecklistEditorState extends TextEditorState<ChecklistEditor> {
+class _ChecklistEditorState extends TextEditorState<ChecklistNote, List<ChecklistLine>, ChecklistEditor> {
+  @override
+  bool savePart(ChecklistNote note, List<ChecklistLine> checklistLines) {
+    note
+      ..checkboxes = checklistLines.map((checklistLine) => checklistLine.toggled).toList()
+      ..texts = checklistLines.map((checklistLine) => checklistLine.text).toList();
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return widget.build(context, ref);
+    return Column(
+      children: [
+        Expanded(
+          child: Checklist(
+            lines: widget.note.checklistLines,
+            enabled: !widget.readOnly,
+            autofocusFirstLine: widget.isNewNote,
+            onChanged: pushChanges,
+          ),
+        ),
+      ],
+    );
   }
 }

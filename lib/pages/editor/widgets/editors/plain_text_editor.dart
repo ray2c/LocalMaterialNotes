@@ -29,7 +29,7 @@ class PlainTextEditor extends TextEditor {
   ConsumerState<PlainTextEditor> createState() => _PlainTextEditorState();
 }
 
-class _PlainTextEditorState extends TextEditorState<PlainTextEditor> {
+class _PlainTextEditorState extends TextEditorState<PlainTextNote, String, PlainTextEditor> {
   late final TextEditingController contentTextController;
 
   @override
@@ -46,6 +46,12 @@ class _PlainTextEditorState extends TextEditorState<PlainTextEditor> {
   }
 
   @override
+  bool savePart(PlainTextNote note, String content) {
+    note.content = content;
+    return true;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: Paddings.pageHorizontal,
@@ -58,7 +64,7 @@ class _PlainTextEditorState extends TextEditorState<PlainTextEditor> {
         expands: true,
         decoration: InputDecoration.collapsed(hintText: context.l.hint_content),
         spellCheckConfiguration: SpellCheckConfiguration(spellCheckService: DefaultSpellCheckService()),
-        onChanged: onChanged,
+        onChanged: pushChanges,
       ),
     );
   }
