@@ -39,14 +39,20 @@ class TextEditorState<T extends TextEditor> extends ConsumerState<T> {
     super.initState();
 
     editorFocusNode = FocusNode(debugLabel: 'Editor focus node');
+    editorFocusNode.addListener(_onFocusChanged);
     widget.setupFocusNode?.call(editorFocusNode);
   }
 
   @override
   void dispose() {
+    editorFocusNode.removeListener(_onFocusChanged);
     widget.setupFocusNode?.call(null);
     editorFocusNode.dispose();
     super.dispose();
+  }
+
+  void _onFocusChanged() {
+    editorHasFocusNotifier.value = editorFocusNode.hasPrimaryFocus;
   }
 
   @override

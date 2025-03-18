@@ -4,7 +4,6 @@ import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:markdown/markdown.dart';
 
-import '../../../../common/constants/constants.dart';
 import '../../../../common/constants/paddings.dart';
 import '../../../../common/extensions/build_context_extension.dart';
 import '../../../../models/note/note.dart';
@@ -42,10 +41,6 @@ class _MarkdownEditorState extends TextEditorState<MarkdownEditor> {
     contentTextController = TextEditingController(text: widget.note.content);
   }
 
-  void onFocusChange(bool hasFocus) {
-    editorHasFocusNotifier.value = hasFocus;
-  }
-
   void onChanged(String content) {
     MarkdownNote note = widget.note..content = content;
 
@@ -76,19 +71,16 @@ class _MarkdownEditorState extends TextEditorState<MarkdownEditor> {
                   ),
                 ),
               )
-              : Focus(
-                onFocusChange: onFocusChange,
-                child: TextField(
-                  controller: contentTextController,
-                  focusNode: editorFocusNode,
-                  readOnly: widget.readOnly && widget.note.isContentEmpty,
-                  autofocus: widget.autofocus,
-                  maxLines: null,
-                  expands: true,
-                  decoration: InputDecoration.collapsed(hintText: context.l.hint_content),
-                  spellCheckConfiguration: SpellCheckConfiguration(spellCheckService: DefaultSpellCheckService()),
-                  onChanged: onChanged,
-                ),
+              : TextField(
+                controller: contentTextController,
+                focusNode: editorFocusNode,
+                readOnly: widget.readOnly && widget.note.isContentEmpty,
+                autofocus: widget.autofocus,
+                maxLines: null,
+                expands: true,
+                decoration: InputDecoration.collapsed(hintText: context.l.hint_content),
+                spellCheckConfiguration: SpellCheckConfiguration(spellCheckService: DefaultSpellCheckService()),
+                onChanged: onChanged,
               ),
     );
   }
