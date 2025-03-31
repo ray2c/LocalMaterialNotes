@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +18,13 @@ import 'services/database_service.dart';
 /// Main entry point of the application.
 Future<void> main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  // 🇳 🇴 ⛔ 🇧 🇱 🇴 🇴 🇩 🇾 🗡️ 🇭 🇪 🇱 🇱
+  for (final locale in widgetsBinding.platformDispatcher.locales) {
+    if (locale.languageCode == 'ru' || locale.countryCode == 'RU' || locale.countryCode == 'CN') {
+      exit(0);
+    }
+  }
 
   // Keep the splash screen until all initializations are done
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);

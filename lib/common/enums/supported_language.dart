@@ -31,14 +31,8 @@ enum SupportedLanguage {
   /// Portuguese.
   pt(Locale('pt'), .62),
 
-  /// Russian.
-  ru(Locale('ru'), .88),
-
   /// Turkish.
   tr(Locale('tr'), .80),
-
-  /// Chinese Simplified.
-  zh(Locale('zh'), 1),
 
   /// Chinese Traditional.
   zhTW(Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'), 0);
